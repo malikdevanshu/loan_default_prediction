@@ -1,0 +1,7 @@
+[project]
+name = "loan-prediction-system"
+version = "0.1.0"
+description = "Building the loan prediction system using ML!"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
