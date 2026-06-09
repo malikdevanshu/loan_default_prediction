@@ -1,0 +1,8 @@
+data/raw_data/accepted_2007_to_2018Q4.csv
+data/raw_data/accepted_2007_to_2018Q4.csv.gz
+data/raw_data/rejected_2007_to_2018Q4.csv
+data/raw_data/rejected_2007_to_2018Q4.csv.gz
+loan_check/__pycache__/download_data.cpython-310.pyc
+
+__pycache__/
+*.pyc
