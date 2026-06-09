@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "kagglehub>=1.0.1",
+    "numpy>=2.2.6",
     "pyaml>=26.2.1",
     "pyspark>=4.1.2",
 ]

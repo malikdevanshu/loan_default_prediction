@@ -11,6 +11,10 @@ class LendingClubPipeline:
         return (
             SparkSession.builder
             .appName(app_name)
+            .master("local[8]")
+            .config("spark.driver.memory", "8g")
+            .config("spark.sql.shuffle.partitions", "64")
+            .config("spark.sql.adaptive.enabled", "true")
             .getOrCreate()
         )
     
