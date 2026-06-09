@@ -7,5 +7,6 @@ class RandomForestClassifierModel(BaseClassifier):
         return RandomForestClassifier(
             featuresCol="features", 
             labelCol="target",
-            numTrees=100
+            weightCol="weight",
+            numTrees=100,
         )

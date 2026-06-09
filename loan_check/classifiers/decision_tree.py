@@ -7,6 +7,7 @@ class DecisionTreeClassifierModel(BaseClassifier):
         return DecisionTreeClassifier(
             featuresCol="features",
             labelCol="target",
+            weightCol="weight",
             maxDepth=8,
         )
     

@@ -7,5 +7,6 @@ class GradientBoosterModel(BaseClassifier):
         return GBTClassifier(
             featuresCol="features",
             labelCol="target",
+            weightCol="weight",
             maxIter=50,
         )

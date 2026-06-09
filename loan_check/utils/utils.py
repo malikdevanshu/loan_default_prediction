@@ -12,6 +12,7 @@ from pyspark.ml.feature import (
 )
 
 from pyspark.ml.tuning import ParamGridBuilder
+from pyspark.sql import functions as F
 from pyspark.sql.types import NumericType
  
 from loan_check.classifiers.decision_tree import DecisionTreeClassifierModel
@@ -103,7 +104,8 @@ def build_feature_stages(df):
     numeric_inputs = [
         f.name
         for f in df.schema.fields
-        if isinstance(f.dataType, NumericType) and f.name != "target"
+        if isinstance(f.dataType, NumericType)
+        and f.name not in ("target", "weight")
     ]
  
     # medians are learned when the pipeline is fit on the train split, so
@@ -134,6 +136,21 @@ def build_feature_stages(df):
         title_idf,
         assembler,
     ]
+
+def add_class_weights(df, label_col="target", weight_col="weight"):
+    counts = df.groupBy(label_col).count().collect()
+    total = sum(row["count"] for row in counts)
+    n_classes = len(counts)
+
+    weights = {
+        row[label_col]: total / (n_classes * row["count"])
+        for row in counts
+    }
+
+    weight_expr = F.create_map(
+        [F.lit(x) for pair in weights.items() for x in pair]
+    )
+    return df.withColumn(weight_col, weight_expr[F.col(label_col)])
 
 def load_and_prepare_data():
     config_values = get_config_values()

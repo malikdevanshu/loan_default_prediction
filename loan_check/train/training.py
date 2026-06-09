@@ -1,4 +1,5 @@
 from loan_check.utils.utils import (
+    add_class_weights,
     build_feature_stages,
     get_config_values,
     get_model_paths,
@@ -12,6 +13,7 @@ def train_models():
     model_dir.mkdir(parents=True, exist_ok=True)
  
     train, test = load_and_prepare_data()  # noqa: RUF059
+    train = add_class_weights(train)
     train = train.cache()
  
     feature_stages = build_feature_stages(train)

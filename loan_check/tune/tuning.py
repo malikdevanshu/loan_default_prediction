@@ -5,6 +5,7 @@ from pyspark.ml.evaluation import BinaryClassificationEvaluator
 from pyspark.ml.tuning import CrossValidator
 
 from loan_check.utils.utils import (
+    add_class_weights,
     build_feature_stages,
     build_param_grid,
     get_config_values,
@@ -20,13 +21,16 @@ def tune_models(cv=3):
     model_dir.mkdir(parents=True, exist_ok=True)
 
     train, test = load_and_prepare_data()  # noqa: RUF059
+    train = add_class_weights(train)
 
     # Fit the shared feature stages once, then tune only the estimators on
     # the cached feature matrix. This avoids re-fitting the indexers /
     # imputer / vectoriser for every fold and every model.
     feature_model = Pipeline(stages=build_feature_stages(train)).fit(train)
     train_feat = (
-        feature_model.transform(train).select("features", "target").cache()
+        feature_model.transform(train)
+        .select("features", "target", "weight")
+        .cache()
     )
 
     evaluator = BinaryClassificationEvaluator(

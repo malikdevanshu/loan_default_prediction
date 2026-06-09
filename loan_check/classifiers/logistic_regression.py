@@ -7,5 +7,6 @@ class LogisticRegressionClassifier(BaseClassifier):
         return LogisticRegression(
             featuresCol= "features",
             labelCol= "target",
+            weightCol="weight",
             maxIter = 100,
         )
