@@ -3,11 +3,11 @@ data/raw_data/accepted_2007_to_2018Q4.csv.gz
 data/raw_data/rejected_2007_to_2018Q4.csv
 data/raw_data/rejected_2007_to_2018Q4.csv.gz
 
-# Medallion parquet layers (regenerated from raw data)
+
 data/bronze/
 data/silver/
 
-# Saved models
+
 loan_check/models/
 
 __pycache__/

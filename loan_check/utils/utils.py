@@ -45,28 +45,32 @@ def get_models():
         "gradient_boosted": GradientBoosterModel,
     }
 def build_param_grid(model_name, estimator):
-    grids = {
-        "logistic_regression": (
+    if model_name == "logistic_regression":
+        grid = (
             ParamGridBuilder()
             .addGrid(estimator.regParam, [0.0, 0.01, 0.1])
             .addGrid(estimator.elasticNetParam, [0.0, 0.5])
-        ),
-        "decision_tree": (
+        )
+    elif model_name == "decision_tree":
+        grid = (
             ParamGridBuilder().addGrid(estimator.maxDepth, [5, 8, 12])
-        ),
-        "random_forest": (
+        )
+    elif model_name == "random_forest":
+        grid = (
             ParamGridBuilder()
             .addGrid(estimator.numTrees, [50, 100])
             .addGrid(estimator.maxDepth, [5, 10])
-        ),
-        "gradient_boosted": (
+        )
+    elif model_name == "gradient_boosted":
+        grid = (
             ParamGridBuilder()
             .addGrid(estimator.maxIter, [20, 50])
             .addGrid(estimator.maxDepth, [3, 5])
-        ),
-    }
- 
-    return grids[model_name].build()
+        )
+    else:
+        raise ValueError(f"Unknown model: {model_name}")
+
+    return grid.build()
 
 def build_feature_stages(df):
     nominal_cols = load_feature_config()["features"]["nominal_columns"]

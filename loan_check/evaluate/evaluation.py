@@ -15,9 +15,10 @@ from loan_check.utils.utils import (
 )
 
 
-def evaluate_models(model_type):
+def evaluate_models(model_type, classifier_name="all"):
     config_values = get_config_values()
     model_dir = config_values["model_dir"]
+    model_dir.mkdir(parents=True, exist_ok=True)
 
     train, test = load_and_prepare_data()  # noqa: RUF059
     test = test.cache()
@@ -39,6 +40,8 @@ def evaluate_models(model_type):
     )
 
     models = get_models()
+    if classifier_name != "all":
+        models = {classifier_name: models[classifier_name]}
     results = []
 
     for model_name, classifier_class in models.items():
@@ -89,16 +92,23 @@ def evaluate_models(model_type):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Tuned or Baseline Model")
+    models= get_models()
+    parser = argparse.ArgumentParser(description="Evaluate baseline or tuned models on the test split.")
     parser.add_argument(
         "--model",
         choices=["tuned", "baseline"],
         default="baseline",
-        help="Model to use for evaluation.",
+        help="Which set of saved models to evaluate.",
     )
+    parser.add_argument(
+        "--classifier",
+        choices=[*models.keys(), "all"],
+        default="all",
+        help="Which classifier to evaluate (default: all).",
+     )
 
     args = parser.parse_args()
-    evaluate_models(model_type=args.model)
+    evaluate_models(model_type=args.model, classifier_name=args.classifier)
 
 
 if __name__ == "__main__":

@@ -25,7 +25,7 @@ def train_models():
  
         model_path = get_model_paths(
             model_name=model_name,
-            model_type="trained",
+            model_type="baseline",
         )
         model.save_model(model_path)
  

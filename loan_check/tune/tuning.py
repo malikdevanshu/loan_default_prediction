@@ -4,7 +4,7 @@ from pyspark.ml import Pipeline, PipelineModel
 from pyspark.ml.evaluation import BinaryClassificationEvaluator
 from pyspark.ml.tuning import CrossValidator
 
-from scripts.train.utils import (
+from loan_check.utils.utils import (
     build_feature_stages,
     build_param_grid,
     get_config_values,
