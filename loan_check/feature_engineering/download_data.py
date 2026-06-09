@@ -3,10 +3,12 @@ import shutil
 
 import kagglehub
 
+from config.config import PROJECT_ROOT
+
 
 
 def download_accepted_dataset(dataset):
-    raw_path = Path(__file__).resolve().parents[1] / "data" / "raw_data"
+    raw_path = PROJECT_ROOT / "data" / "raw_data"
     raw_path.mkdir(parents=True, exist_ok=True)
 
     cache_dir = Path(kagglehub.dataset_download(dataset))
@@ -24,5 +26,6 @@ def download_accepted_dataset(dataset):
     return destination
 
 
-accepted_path = download_accepted_dataset("wordsforthewise/lending-club")
-print("Accepted file saved to:", accepted_path)
+if __name__ == "__main__":
+    accepted_path = download_accepted_dataset("wordsforthewise/lending-club")
+    print("Accepted file saved to:", accepted_path)

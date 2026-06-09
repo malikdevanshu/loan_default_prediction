@@ -1,6 +1,7 @@
 paths:
   raw_data: "data/raw_data"
-  bronze_data: "data/processed_data"
+  bronze_data: "data/bronze"
+  silver_data: "data/silver"
 random_state:
   state: 42
 test_size:

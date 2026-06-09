@@ -30,8 +30,9 @@ def get_config_values():
  
     return {
         "raw_data_path": Path(config["paths"]["raw_data"]),
+        "bronze_data_path": Path(config["paths"]["bronze_data"]),
+        "silver_data_path": Path(config["paths"]["silver_data"]),
         "model_dir": Path(config["model_path"]["path"]),
-        "processed_data_path": Path(config["paths"]["bronze_data"]),
         "test_size": config["test_size"]["size"],
         "random_state": config["random_state"]["state"],
     }
@@ -132,13 +133,22 @@ def build_feature_stages(df):
 
 def load_and_prepare_data():
     config_values = get_config_values()
+ 
     pipeline = LendingClubPipeline()
-    raw = pipeline.load_data(config_values["raw_data_path"])
+ 
+    bronze = pipeline.build_bronze(
+        raw_data_path=config_values["raw_data_path"],
+        bronze_path=config_values["bronze_data_path"],
+    )
  
     preprocessor = Preprocessor()
-    data = preprocessor.preprocess(raw)
+    silver = pipeline.build_silver(
+        bronze_df=bronze,
+        silver_path=config_values["silver_data_path"],
+        preprocessor=preprocessor,
+    )
  
-    return data.randomSplit(
+    return silver.randomSplit(
         [1 - config_values["test_size"], config_values["test_size"]],
         seed=config_values["random_state"],
     )
