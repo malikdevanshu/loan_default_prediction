@@ -1,0 +1,9 @@
+paths:
+  raw_data: "data/raw_data"
+  bronze_data: "data/processed_data"
+random_state:
+  state: 42
+test_size:
+  size: 0.2
+model_path:
+  path: "loan_check/models"
