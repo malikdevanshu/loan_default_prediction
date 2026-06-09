@@ -1,12 +1,12 @@
 from pyspark.sql import functions as F
-from feature_config import load_feature_config
+from loan_check.feature_engineering.feature_config import load_feature_config
 
 
 class Preprocessor:
     def __init__(self):
         self.config = load_feature_config()
-        self.paid = self.config["target_labels"]["paid_statuses"]
-        self.default = self.config["target_labels"]["default_statuses"]
+        self.paid = self.config["features"]["target_labels"]["paid_statuses"]
+        self.default = self.config["features"]["target_labels"]["default_statuses"]
         self.emp_length_map = self.config["features"]["emp_length_map"]
 
     def _add_target(self, df):

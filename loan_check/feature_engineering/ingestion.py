@@ -31,7 +31,7 @@ class LendingClubPipeline:
             self.spark.read
             .option("header", True)
             .option("inferSchema", False)
-            .option("multiLine", True)
+            .option("multiLine", False)
             .option("quote", '"')
             .option("escape", '"')
             .csv(str(csv_file))

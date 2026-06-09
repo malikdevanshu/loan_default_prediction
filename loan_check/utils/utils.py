@@ -132,8 +132,8 @@ def build_feature_stages(df):
 
 def load_and_prepare_data():
     config_values = get_config_values()
- 
-    raw = LendingClubPipeline.load_data(config_values["raw_data_path"])
+    pipeline = LendingClubPipeline()
+    raw = pipeline.load_data(config_values["raw_data_path"])
  
     preprocessor = Preprocessor()
     data = preprocessor.preprocess(raw)

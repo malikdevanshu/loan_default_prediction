@@ -11,13 +11,13 @@ class BaseClassifier(ABC):
         pass
 
     def train(self, df, feature_stages):
-        pipeline = Pipeline(*feature_stages, self.estimator)
+        pipeline = Pipeline(stages=[*feature_stages, self.estimator])
         self.model = pipeline.fit(df)
         return self.model
     
 
     def predict(self, df):
-        self.model.transform(df)
+        return self.model.transform(df)
 
     def save_model(self, model_path):
         self.model.write().overwrite().save(str(model_path))
