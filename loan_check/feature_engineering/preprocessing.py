@@ -5,9 +5,9 @@ from feature_config import load_feature_config
 class Preprocessor:
     def __init__(self):
         self.config = load_feature_config()
-        self.paid = self.config["paid_statuses"]
-        self.default = self.config["default_statuses"]
-        self.emp_length_map = self.config["emp_length_map"]
+        self.paid = self.config["target_labels"]["paid_statuses"]
+        self.default = self.config["target_labels"]["default_statuses"]
+        self.emp_length_map = self.config["features"]["emp_length_map"]
 
     def _add_target(self, df):
         df = df.filter(F.col("loan_status").isin(self.paid + self.default))
@@ -68,7 +68,7 @@ class Preprocessor:
         return df.withColumn("title", F.coalesce(F.lower("title"), F.lit("")))
 
     def _cast_numeric(self, df):
-        for c in self.config["numeric_columns"]:
+        for c in self.config["features"]["numeric_columns"]:
             if c in df.columns:
                 df = df.withColumn(c, F.col(c).cast("double"))
         return df
@@ -105,17 +105,17 @@ class Preprocessor:
             "has_secondary_data",
             F.col("open_il_24m").isNotNull().cast("int"),
         )
-        return df.drop(*self.config["structural_drop_columns"])
+        return df.drop(*self.config["features"]["structural_drop_columns"])
 
     def _handle_missing(self, df):
-        for c in self.config["recency_columns"] + self.config["flag_and_impute_columns"]:
+        for c in self.config["features"]["recency_columns"] + self.config["features"]["flag_and_impute_columns"]:
             if c in df.columns:
                 df = df.withColumn(
                     f"{c}_missing", F.col(c).isNull().cast("int")
                 )
 
         zero_cols = [
-            c for c in self.config["recency_columns"] + self.config["zero_fill_columns"] if c in df.columns
+            c for c in self.config["features"]["recency_columns"] + self.config["features"]["zero_fill_columns"] if c in df.columns
         ]
         return df.fillna(0, subset=zero_cols)
 
@@ -123,13 +123,13 @@ class Preprocessor:
         if "loan_status" not in data.columns:
             raise ValueError("data must contain the loan_status column")
 
-        df = data.drop(*self.config["drop_columns"])
+        df = data.drop(*self.config["features"]["drop_columns"])
         df = self._add_target(df)
         df = self._parse_string_numbers(df)
         df = self._add_date_features(df)
         df = self._add_ordinal_features(df)
         df = self._add_text_flags(df)
-        df = df.drop(*self.config["encoded_raw_columns"])
+        df = df.drop(*self.config["features"]["encoded_raw_columns"])
         df = self._cast_numeric(df)
         df = self._add_ratio_features(df)
         df = df.drop("fico_range_low", "fico_range_high", "grade_ord")
