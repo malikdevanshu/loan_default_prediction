@@ -62,12 +62,29 @@ default class** (the minority class) on a separate validation slice — see
 
 > Fill these in from `loan_check/models/tuned_evaluation_results.csv`.
 
-<!-- Add plots here once generated, e.g.:
+### Figures
+
+*Generated with `python -m reports.make_plots --model tuned`.*
+
+**Precision-Recall curves** — held-out test set, average precision in the legend.
+The right view under heavy class imbalance (ROC would look optimistic here).
+
 ![Precision-Recall curves](reports/figures/pr_curves.png)
-![Threshold vs F1 / precision / recall](reports/figures/threshold_sweep.png)
-![Confusion matrix (tuned threshold)](reports/figures/confusion_matrix.png)
+
+**Threshold sweep** — precision / recall / F1 vs the decision threshold on the
+validation slice. The dashed line marks the F1-optimal cutoff each model is then
+reported at, instead of a blind 0.5.
+
+![Threshold sweep](reports/figures/threshold_sweep.png)
+
+**Confusion matrices** — at each model's tuned threshold on the test set: caught
+vs missed defaults.
+
+![Confusion matrices at tuned threshold](reports/figures/confusion_matrix.png)
+
+**Feature importance** — top features driving the best tree-based model.
+
 ![Feature importance](reports/figures/feature_importance.png)
--->
 
 **Takeaways**
 
