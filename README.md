@@ -55,12 +55,11 @@ default class** (the minority class) on a separate validation slice — see
 
 | Model | AUC | Default-class F1 @0.5 | Default-class F1 (tuned) | Default-class recall (tuned) |
 |-------|----:|----------------------:|-------------------------:|-----------------------------:|
-| Logistic Regression | `<fill>` | `<fill>` | `<fill>` | `<fill>` |
-| Decision Tree       | `<fill>` | `<fill>` | `<fill>` | `<fill>` |
-| Random Forest       | `<fill>` | `<fill>` | `<fill>` | `<fill>` |
-| Gradient Boosted    | `<fill>` | `<fill>` | `<fill>` | `<fill>` |
+| Logistic Regression | `0.72` | `0.44` | `0.44` | `0.65` |
+| Decision Tree       | `0.59` | `0.43` | `0.43` | `0.60` |
+| Random Forest       | `0.72` | `0.43` | `0.44` | `0.60` |
+| Gradient Boosted    | `0.73` | `0.44` | `0.45` | `0.61` |
 
-> Fill these in from `loan_check/models/tuned_evaluation_results.csv`.
 
 ### Figures
 
