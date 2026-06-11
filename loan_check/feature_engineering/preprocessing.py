@@ -27,9 +27,10 @@ class Preprocessor:
     def _add_date_features(self, df):
         return (
             df
-            .withColumn("issue_d", F.to_date("issue_d", "MMM-yyyy"))
+            .withColumn("issue_d", F.try_to_date("issue_d", "MMM-yyyy"))
             .withColumn(
-                "earliest_cr_line", F.to_date("earliest_cr_line", "MMM-yyyy")
+                "earliest_cr_line",
+                F.try_to_date("earliest_cr_line", "MMM-yyyy"),
             )
             .withColumn(
                 "credit_hist_months",
