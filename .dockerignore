@@ -1,0 +1,11 @@
+.git
+.venv
+__pycache__/
+*.pyc
+*.crc
+.pytest_cache/
+tests/
+reports/figures/
+data/
+loan_check/models/
+*.md

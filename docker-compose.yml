@@ -1,0 +1,29 @@
+
+x-pipeline: &pipeline
+  build: .
+  image: loan-default:latest
+
+  mem_limit: 10g
+  volumes:
+    - ./data:/app/data                            # raw CSV in, bronze/silver out
+    - ./loan_check/models:/app/loan_check/models  # trained models out
+
+services:
+  train:
+    <<: *pipeline
+    command: ["loan_check.train.training"]
+
+  tune:
+    <<: *pipeline
+    command: ["loan_check.tune.tuning"]
+
+  evaluate:
+    <<: *pipeline
+    command: ["loan_check.evaluate.evaluation", "--model", "tuned"]
+
+  download:
+    <<: *pipeline
+    environment:
+      KAGGLE_USERNAME: ${KAGGLE_USERNAME:-}
+      KAGGLE_KEY: ${KAGGLE_KEY:-}
+    command: ["loan_check.feature_engineering.download_data"]
