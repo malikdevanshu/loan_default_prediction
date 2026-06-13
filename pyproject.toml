@@ -17,6 +17,7 @@ dependencies = [
 [dependency-groups]
 dev = [
     "isort>=8.0.1",
+    "mypy>=2.1.0",
     "pytest>=9.0.3",
     "ruff>=0.15.17",
     "tool>=0.8.0",

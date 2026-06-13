@@ -103,7 +103,7 @@ def build_feature_stages(df):
     title_idf = IDF(inputCol="title_tf", outputCol="title_tfidf")
 
     numeric_inputs = [
-        f.name
+        n.name
         for n in df.schema.fields
         if isinstance(n.dataType, NumericType)
         and n.name not in {"target", "weight"}
