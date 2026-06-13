@@ -2,10 +2,12 @@ from pyspark.ml.classification import RandomForestClassifier
 
 from .base_classifier import BaseClassifier
 
+
 class RandomForestClassifierModel(BaseClassifier):
-    def build_estimator(self):
+    @staticmethod
+    def build_estimator():
         return RandomForestClassifier(
-            featuresCol="features", 
+            featuresCol="features",
             labelCol="target",
             weightCol="weight",
             numTrees=100,

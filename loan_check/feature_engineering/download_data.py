@@ -1,10 +1,10 @@
-from pathlib import Path
 import shutil
+
+from pathlib import Path
 
 import kagglehub
 
 from config.config import PROJECT_ROOT
-
 
 
 def download_accepted_dataset(dataset):
@@ -14,8 +14,7 @@ def download_accepted_dataset(dataset):
     cache_dir = Path(kagglehub.dataset_download(dataset))
 
     accepted_file = next(
-        (f for f in cache_dir.rglob("*accepted*.csv") if f.is_file()),
-        None
+        (f for f in cache_dir.rglob("*accepted*.csv") if f.is_file()), None
     )
 
     if accepted_file is None:

@@ -16,5 +16,58 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "isort>=8.0.1",
     "pytest>=9.0.3",
+    "ruff>=0.15.17",
+    "tool>=0.8.0",
 ]
+
+[tool.isort]
+multi_line_output = 3
+include_trailing_comma = true
+use_parentheses = true
+sections = ["FUTURE", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
+default_section = "THIRDPARTY"
+known_first_party = ["loan_check"]
+lines_between_types = 1
+lines_between_sections = 1
+combine_as_imports = true
+force_single_line = false
+order_by_type = true
+skip = [".venv", "venv", "node_modules", "migrations", ".vscode", ".github"]
+skip_gitignore = true
+balanced_wrapping = true
+atomic = true
+
+[tool.ruff]
+target-version = "py310"
+line-length = 80
+indent-width = 4
+extend-exclude = ["docs", "test", "tests"]
+
+[tool.ruff.lint]
+select = ["F", "E"]
+extend-select = [
+    "C90","I","N","UP","YTT","ASYNC","TRIO","S","BLE","B","A","COM",
+    "C4","DTZ","T10","DJ","EM","EXE","FA","ISC","ICN","G","INP","PIE","PYI","PT","Q",
+    "RSE","RET","SLOT","SIM","TID","TCH","INT","ARG","PTH","PD","PL","TRY","FLY","NPY",
+    "AIR","PERF","FURB","LOG","RUF",
+]
+ignore = [
+    "ANN101","ANN102","I001","NPY002","INP001","TRY003",
+    "ISC001","COM812","EM101","ANN401","S311","PLW1641","N999",
+]
+fixable = ["ALL"]
+unfixable = []
+preview = true
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+preview = false
+docstring-code-format = true
+
+[tool.ruff.lint.pylint]
+max-locals = 25

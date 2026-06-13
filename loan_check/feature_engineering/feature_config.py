@@ -2,6 +2,7 @@ from pathlib import Path
 
 import yaml
 
+
 def load_feature_config():
     config_path = Path(__file__).resolve().parent / "feature_seperation.yaml"
 

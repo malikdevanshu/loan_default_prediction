@@ -5,7 +5,7 @@ import pandas as pd
 
 from pyspark.ml.evaluation import BinaryClassificationEvaluator
 from pyspark.ml.functions import vector_to_array
-from pyspark.sql import functions as F
+from pyspark.sql import functions as f
 
 from loan_check.utils.utils import (
     get_config_values,
@@ -18,12 +18,10 @@ from loan_check.utils.utils import (
 def _scores_to_pandas(pred_df, label_col="target", prob_col="probability"):
     # Pull the predicted probability of the positive (default) class plus the
     # true label down to the driver so we can sweep thresholds cheaply.
-    return (
-        pred_df.select(
-            vector_to_array(F.col(prob_col))[1].alias("p1"),
-            F.col(label_col).cast("int").alias("y"),
-        ).toPandas()
-    )
+    return pred_df.select(
+        vector_to_array(f.col(prob_col))[1].alias("p1"),
+        f.col(label_col).cast("int").alias("y"),
+    ).toPandas()
 
 
 def _binary_metrics(y, p, threshold):
@@ -112,8 +110,8 @@ def evaluate_models(model_type, classifier_name="all"):
         auc = auc_eval.evaluate(test_preds)
 
         test_scores = _scores_to_pandas(test_preds)
-        y = test_scores["y"].values
-        p = test_scores["p1"].values
+        y = test_scores["y"].array
+        p = test_scores["p1"].array
 
         default_m = _binary_metrics(y, p, 0.5)
         tuned_m = _binary_metrics(y, p, best_t)

@@ -1,19 +1,18 @@
 import argparse
+
 from pathlib import Path
 
-import matplotlib
+import matplotlib as mpl
 
-matplotlib.use("Agg")  # headless: render to files, no display needed
+mpl.use("Agg")  # headless: render to files, no display needed
 import matplotlib.pyplot as plt
 import numpy as np
 
 # Reuse the exact metric + threshold logic the evaluator uses, so the figures
 # stay consistent with <model>_evaluation_results.csv.
-from loan_check.evaluate.evaluation import (
-    _best_threshold,
-    _binary_metrics,
-    _scores_to_pandas,
-)
+from loan_check.evaluate.evaluation import _best_threshold  # noqa: PLC2701
+from loan_check.evaluate.evaluation import _binary_metrics  # noqa: PLC2701
+from loan_check.evaluate.evaluation import _scores_to_pandas  # noqa: PLC2701
 from loan_check.utils.utils import (
     get_config_values,
     get_model_paths,
@@ -86,7 +85,9 @@ def plot_pr_curves(data):
         recall, precision, ap = pr_curve(y, p)
         plt.plot(recall, precision, label=f"{name} (AP={ap:.3f})")
     baseline = np.mean(next(iter(data.values()))["test"]["y"].values)
-    plt.axhline(baseline, ls="--", c="grey", lw=1, label=f"no-skill ({baseline:.2f})")
+    plt.axhline(
+        baseline, ls="--", c="grey", lw=1, label=f"no-skill ({baseline:.2f})"
+    )
     plt.xlabel("Recall (default class)")
     plt.ylabel("Precision (default class)")
     plt.title("Precision-Recall curves (test set)")
@@ -100,8 +101,10 @@ def plot_threshold_sweep(data):
     n = len(data)
     cols = 2
     rows = (n + cols - 1) // cols
-    fig, axes = plt.subplots(rows, cols, figsize=(6 * cols, 4 * rows), squeeze=False)
-    for ax, (name, d) in zip(axes.flat, data.items()):
+    fig, axes = plt.subplots(
+        rows, cols, figsize=(6 * cols, 4 * rows), squeeze=False
+    )
+    for ax, (name, d) in zip(axes.flat, data.items(), strict=True):
         y, p = d["val"]["y"].values, d["val"]["p1"].values
         prec = [_binary_metrics(y, p, t)["precision"] for t in grid]
         rec = [_binary_metrics(y, p, t)["recall"] for t in grid]
@@ -109,7 +112,9 @@ def plot_threshold_sweep(data):
         ax.plot(grid, prec, label="precision")
         ax.plot(grid, rec, label="recall")
         ax.plot(grid, f1, label="F1", lw=2)
-        ax.axvline(d["threshold"], ls="--", c="k", label=f"chosen={d['threshold']:.2f}")
+        ax.axvline(
+            d["threshold"], ls="--", c="k", label=f"chosen={d['threshold']:.2f}"
+        )
         ax.set_title(name)
         ax.set_xlabel("threshold")
         ax.set_ylim(0, 1)
@@ -126,20 +131,36 @@ def plot_confusion_matrices(data):
     n = len(data)
     cols = 2
     rows = (n + cols - 1) // cols
-    fig, axes = plt.subplots(rows, cols, figsize=(4.5 * cols, 4 * rows), squeeze=False)
-    for ax, (name, d) in zip(axes.flat, data.items()):
+    fig, axes = plt.subplots(
+        rows, cols, figsize=(4.5 * cols, 4 * rows), squeeze=False
+    )
+    for ax, (name, d) in zip(axes.flat, data.items(), strict=True):
         y, p = d["test"]["y"].values, d["test"]["p1"].values
         t = d["threshold"]
         pred = (p >= t).astype(int)
-        cm = np.array([
-            [int(((pred == 0) & (y == 0)).sum()), int(((pred == 1) & (y == 0)).sum())],
-            [int(((pred == 0) & (y == 1)).sum()), int(((pred == 1) & (y == 1)).sum())],
-        ])
+        cm = np.array(
+            [
+                [
+                    int(((pred == 0) & (y == 0)).sum()),
+                    int(((pred == 1) & (y == 0)).sum()),
+                ],
+                [
+                    int(((pred == 0) & (y == 1)).sum()),
+                    int(((pred == 1) & (y == 1)).sum()),
+                ],
+            ]
+        )
         ax.imshow(cm, cmap="Blues")
         for i in range(2):
             for j in range(2):
-                ax.text(j, i, f"{cm[i, j]:,}", ha="center", va="center",
-                        color="white" if cm[i, j] > cm.max() / 2 else "black")
+                ax.text(
+                    j,
+                    i,
+                    f"{cm[i, j]:,}",
+                    ha="center",
+                    va="center",
+                    color="white" if cm[i, j] > cm.max() / 2 else "black",
+                )
         ax.set_xticks([0, 1], ["pred paid", "pred default"])
         ax.set_yticks([0, 1], ["true paid", "true default"])
         ax.set_title(f"{name} (thr={t:.2f})")
@@ -185,8 +206,12 @@ def _save(fname):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Generate README evaluation figures.")
-    parser.add_argument("--model", choices=["tuned", "baseline"], default="tuned")
+    parser = argparse.ArgumentParser(
+        description="Generate README evaluation figures."
+    )
+    parser.add_argument(
+        "--model", choices=["tuned", "baseline"], default="tuned"
+    )
     args = parser.parse_args()
 
     cfg = get_config_values()

@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
+
 from pyspark.ml import Pipeline, PipelineModel
+
 
 class BaseClassifier(ABC):
     def __init__(self):
@@ -14,7 +16,6 @@ class BaseClassifier(ABC):
         pipeline = Pipeline(stages=[*feature_stages, self.estimator])
         self.model = pipeline.fit(df)
         return self.model
-    
 
     def predict(self, df):
         return self.model.transform(df)
@@ -24,6 +25,4 @@ class BaseClassifier(ABC):
 
     def load_model(self, model_path):
         self.model = PipelineModel.load(str(model_path))
-        return self.model        
-
-        
+        return self.model

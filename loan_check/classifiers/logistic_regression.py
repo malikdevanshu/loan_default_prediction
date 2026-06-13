@@ -1,12 +1,14 @@
-from pyspark.ml.classification import  LogisticRegression
+from pyspark.ml.classification import LogisticRegression
 
 from .base_classifier import BaseClassifier
 
+
 class LogisticRegressionClassifier(BaseClassifier):
-    def build_estimator(self):
+    @staticmethod
+    def build_estimator():
         return LogisticRegression(
-            featuresCol= "features",
-            labelCol= "target",
+            featuresCol="features",
+            labelCol="target",
             weightCol="weight",
-            maxIter = 100,
+            maxIter=100,
         )

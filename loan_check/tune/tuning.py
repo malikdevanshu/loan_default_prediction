@@ -23,9 +23,6 @@ def tune_models(cv=3):
     train, test = load_and_prepare_data()  # noqa: RUF059
     train = add_class_weights(train)
 
-    # Fit the shared feature stages once, then tune only the estimators on
-    # the cached feature matrix. This avoids re-fitting the indexers /
-    # imputer / vectoriser for every fold and every model.
     feature_model = Pipeline(stages=build_feature_stages(train)).fit(train)
     train_feat = (
         feature_model.transform(train)
@@ -62,12 +59,9 @@ def tune_models(cv=3):
         best_index = cv_model.avgMetrics.index(max(cv_model.avgMetrics))
         best_score = cv_model.avgMetrics[best_index]
         best_params = {
-            param.name: value
-            for param, value in param_grid[best_index].items()
+            param.name: value for param, value in param_grid[best_index].items()
         }
 
-        # Stitch the already-fitted feature stages onto the best estimator so
-        # the tuned model is saved in the same end-to-end format as baselines.
         classifier.model = PipelineModel(
             [*feature_model.stages, cv_model.bestModel]
         )
