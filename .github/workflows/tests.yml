@@ -21,8 +21,6 @@ jobs:
       - name: Install dependencies
         run: uv sync
 
-      - name: Check isort
-        run: uv run isort --check-only --diff .
 
       - name: Check ruff
         run: uv run ruff check .
