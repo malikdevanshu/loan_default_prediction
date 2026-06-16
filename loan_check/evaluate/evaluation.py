@@ -9,7 +9,7 @@ from pyspark.ml.evaluation import BinaryClassificationEvaluator
 from pyspark.ml.functions import vector_to_array
 from pyspark.sql import functions as f
 from pyspark.sql import DataFrame
-from pandas.api.extensions import ExtensionArray
+from pandas.api.extensions import ExtensionArray  # noqa: TC002
 
 from loan_check.utils.utils import (
     get_config_values,

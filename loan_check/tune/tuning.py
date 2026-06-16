@@ -3,6 +3,7 @@ import pandas as pd
 from pyspark.ml import Pipeline, PipelineModel
 from pyspark.ml.evaluation import BinaryClassificationEvaluator
 from pyspark.ml.tuning import CrossValidator
+from pyspark.sql import DataFrame
 
 from loan_check.utils.utils import (
     add_class_weights,
