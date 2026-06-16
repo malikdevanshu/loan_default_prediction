@@ -2,9 +2,11 @@ from pathlib import Path
 
 from pyspark.sql import DataFrame, SparkSession
 
+from loan_check.feature_engineering.preprocessing import Preprocessor
+
 
 class LendingClubPipeline:
-    def __init__(self, app_name="lendingclub"):
+    def __init__(self, app_name: str = "lendingclub") -> None:
         self.spark = self._get_spark(app_name)
 
     @staticmethod
@@ -22,7 +24,7 @@ class LendingClubPipeline:
     def _is_written(path: Path) -> bool:
         return (path / "_SUCCESS").exists()
 
-    def load_raw_csv(self, raw_data_path) -> DataFrame:
+    def load_raw_csv(self, raw_data_path: Path) -> DataFrame:
         raw_data_path = Path(raw_data_path)
 
         csv_file = next(
@@ -46,7 +48,7 @@ class LendingClubPipeline:
         )
 
     def build_bronze(
-        self, raw_data_path, bronze_path, overwrite=False
+        self, raw_data_path: Path, bronze_path: Path, overwrite: bool = False
     ) -> DataFrame:
         bronze_path = Path(bronze_path)
 
@@ -63,7 +65,11 @@ class LendingClubPipeline:
         return self.spark.read.parquet(str(bronze_path))
 
     def build_silver(
-        self, bronze_df, silver_path, preprocessor, overwrite=False
+        self,
+        bronze_df: DataFrame,
+        silver_path: Path,
+        preprocessor: Preprocessor,
+        overwrite: bool = False,
     ) -> DataFrame:
         silver_path = Path(silver_path)
 

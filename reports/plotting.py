@@ -7,6 +7,7 @@ import matplotlib as mpl
 mpl.use("Agg")  # headless: render to files, no display needed
 import matplotlib.pyplot as plt
 import numpy as np
+from numpy.typing import NDArray
 
 # Reuse the exact metric + threshold logic the evaluator uses, so the figures
 # stay consistent with <model>_evaluation_results.csv.
@@ -23,7 +24,9 @@ from loan_check.utils.utils import (
 FIG_DIR = Path(__file__).resolve().parent / "figures"
 
 
-def pr_curve(y, scores):
+def pr_curve(
+    y, scores
+) -> tuple[NDArray[np.float64], NDArray[np.float64], float]:
     order = np.argsort(-scores)
     y_sorted = y[order]
     tp = np.cumsum(y_sorted)

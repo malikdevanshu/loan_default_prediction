@@ -2,10 +2,13 @@ import argparse
 
 import numpy as np
 import pandas as pd
+from typing import Any
 
 from pyspark.ml.evaluation import BinaryClassificationEvaluator
 from pyspark.ml.functions import vector_to_array
 from pyspark.sql import functions as f
+from pyspark.sql import DataFrame
+from pandas.api.extensions import ExtensionArray
 
 from loan_check.utils.utils import (
     get_config_values,
@@ -15,16 +18,20 @@ from loan_check.utils.utils import (
 )
 
 
-def _scores_to_pandas(pred_df, label_col="target", prob_col="probability"):
-    # Pull the predicted probability of the positive (default) class plus the
-    # true label down to the driver so we can sweep thresholds cheaply.
+def _scores_to_pandas(
+    pred_df: DataFrame, label_col: str = "target", prob_col: str = "probability"
+) -> pd.DataFrame:
     return pred_df.select(
         vector_to_array(f.col(prob_col))[1].alias("p1"),
         f.col(label_col).cast("int").alias("y"),
     ).toPandas()
 
 
-def _binary_metrics(y, p, threshold):
+def _binary_metrics(
+    y: np.ndarray | pd.Series[Any] | ExtensionArray,
+    p: np.ndarray | ExtensionArray,
+    threshold: float,
+) -> dict[str, float]:
     pred = (p >= threshold).astype(int)
     tp = int(((pred == 1) & (y == 1)).sum())
     fp = int(((pred == 1) & (y == 0)).sum())
@@ -47,8 +54,9 @@ def _binary_metrics(y, p, threshold):
     }
 
 
-def _best_threshold(y, p):
-    # Choose the cutoff that maximises F1 on the default class.
+def _best_threshold(
+    y: np.ndarray[Any, np.dtype[np.int_]] | pd.Series[Any], p: np.ndarray
+) -> tuple[float, float]:
     best_t, best_f1 = 0.5, -1.0
     for t in np.linspace(0.05, 0.95, 91):
         f1 = _binary_metrics(y, p, t)["f1"]
@@ -57,7 +65,9 @@ def _best_threshold(y, p):
     return best_t, best_f1
 
 
-def evaluate_models(model_type, classifier_name="all"):
+def evaluate_models(
+    model_type: str, classifier_name: str = "all"
+) -> pd.DataFrame:
     config_values = get_config_values()
     model_dir = config_values["model_dir"]
     model_dir.mkdir(parents=True, exist_ok=True)
@@ -162,7 +172,7 @@ def evaluate_models(model_type, classifier_name="all"):
     return results_df
 
 
-def main():
+def main() -> None:
     models = get_models()
     parser = argparse.ArgumentParser(
         description="Evaluate baseline or tuned models on the test split."

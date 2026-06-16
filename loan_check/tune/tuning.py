@@ -15,7 +15,7 @@ from loan_check.utils.utils import (
 )
 
 
-def tune_models(cv=3):
+def tune_models(cv: int = 3) -> DataFrame:
     config_values = get_config_values()
     model_dir = config_values["model_dir"]
     model_dir.mkdir(parents=True, exist_ok=True)

@@ -7,7 +7,7 @@ import kagglehub
 from config.config import PROJECT_ROOT
 
 
-def download_accepted_dataset(dataset):
+def download_accepted_dataset(dataset: str) -> Path:
     raw_path = PROJECT_ROOT / "data" / "raw_data"
     raw_path.mkdir(parents=True, exist_ok=True)
 

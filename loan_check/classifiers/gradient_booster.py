@@ -5,7 +5,7 @@ from .base_classifier import BaseClassifier
 
 class GradientBoosterModel(BaseClassifier):
     @staticmethod
-    def build_estimator():
+    def build_estimator() -> GBTClassifier:
         return GBTClassifier(
             featuresCol="features",
             labelCol="target",

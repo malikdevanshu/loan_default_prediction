@@ -1,0 +1,10 @@
+{
+  "[python]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "charliermarsh.ruff",
+  },
+  "window.autoDetectColorScheme": false,
+  "workbench.colorTheme": "Dark 2026",
+  "workbench.iconTheme": "vs-seti",
+  "editor.fontFamily": "Source Code Pro"
+}

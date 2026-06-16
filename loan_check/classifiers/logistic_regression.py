@@ -5,7 +5,7 @@ from .base_classifier import BaseClassifier
 
 class LogisticRegressionClassifier(BaseClassifier):
     @staticmethod
-    def build_estimator():
+    def build_estimator() -> LogisticRegression:
         return LogisticRegression(
             featuresCol="features",
             labelCol="target",

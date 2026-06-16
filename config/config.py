@@ -2,10 +2,12 @@ from pathlib import Path
 
 import yaml
 
+from typing import Any
+
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 
-def load_config():
+def load_config() -> dict[str, Any]:
     config_path = Path(__file__).resolve().parent / "config.yaml"
 
     with config_path.open("r", encoding="utf-8") as f:

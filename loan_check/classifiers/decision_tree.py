@@ -5,7 +5,7 @@ from .base_classifier import BaseClassifier
 
 class DecisionTreeClassifierModel(BaseClassifier):
     @staticmethod
-    def build_estimator():
+    def build_estimator() -> DecisionTreeClassifier:
         return DecisionTreeClassifier(
             featuresCol="features",
             labelCol="target",

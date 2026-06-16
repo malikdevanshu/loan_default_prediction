@@ -1,4 +1,6 @@
 from pathlib import Path
+from typing import Any
+from pyspark.sql import DataFrame
 
 from pyspark.ml.feature import (
     IDF,
@@ -26,7 +28,7 @@ from loan_check.feature_engineering.ingestion import LendingClubPipeline
 from loan_check.feature_engineering.preprocessing import Preprocessor
 
 
-def get_config_values():
+def get_config_values() -> dict[str, int | float | Path]:
     config = load_config()
 
     return {
@@ -39,7 +41,7 @@ def get_config_values():
     }
 
 
-def get_models():
+def get_models() -> dict:
     return {
         "logistic_regression": LogisticRegressionClassifier,
         "decision_tree": DecisionTreeClassifierModel,
@@ -48,7 +50,7 @@ def get_models():
     }
 
 
-def build_param_grid(model_name, estimator):
+def build_param_grid(model_name: str, estimator: Any) -> list[Any]:
     if model_name == "logistic_regression":
         grid = (
             ParamGridBuilder()
@@ -76,7 +78,7 @@ def build_param_grid(model_name, estimator):
     return grid.build()
 
 
-def build_feature_stages(df):
+def build_feature_stages(df: DataFrame) -> list[Any]:
     nominal_cols = load_feature_config()["features"]["nominal_columns"]
 
     indexers = [
@@ -139,7 +141,9 @@ def build_feature_stages(df):
     ]
 
 
-def add_class_weights(df, label_col="target", weight_col="weight"):
+def add_class_weights(
+    df: DataFrame, label_col: str = "target", weight_col: str = "weight"
+) -> DataFrame:
     counts = df.groupBy(label_col).count().collect()
     total = sum(row["count"] for row in counts)
     n_classes = len(counts)
@@ -154,7 +158,7 @@ def add_class_weights(df, label_col="target", weight_col="weight"):
     return df.withColumn(weight_col, weight_expr[f.col(label_col)])
 
 
-def load_and_prepare_data():
+def load_and_prepare_data() -> list[DataFrame]:
     config_values = get_config_values()
 
     pipeline = LendingClubPipeline()
@@ -177,7 +181,7 @@ def load_and_prepare_data():
     )
 
 
-def get_model_paths(model_name, model_type):
+def get_model_paths(model_name: str, model_type: str) -> Path:
     config_values = get_config_values()
     model_dir = config_values["model_dir"]
 

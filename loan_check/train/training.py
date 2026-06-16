@@ -8,7 +8,7 @@ from loan_check.utils.utils import (
 )
 
 
-def train_models():
+def train_models() -> None:
     config_values = get_config_values()
     model_dir = config_values["model_dir"]
     model_dir.mkdir(parents=True, exist_ok=True)
